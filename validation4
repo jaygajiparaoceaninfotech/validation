@@ -124,9 +124,9 @@
 
             var icon = document.getElementById('togglePassword');
             if (type === 'password') {
-                icon.src = 'https://upload.wikimedia.org/wikipedia/commons/2/24/Eye_icon.svg';
+                icon.src = "https://cdn-icons-png.flaticon.com/512/4298/4298899.png";
             } else {
-                icon.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Visible_icon.svg/120px-Visible_icon.svg.png';
+                icon.src = "https://cdn-icons-png.flaticon.com/512/565/565655.png";
             }
         });
 
