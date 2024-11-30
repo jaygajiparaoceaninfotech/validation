@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form with Bootstrap</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .is-invalid {
+            border-color: red;
+        }
+        .invalid-feedback {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Form Example</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="myForm" action="your_backend_script.php" method="POST">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="name" name="name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email">
+                                <div class="invalid-feedback">Name must be part of the email before the "@".</div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+    <script>
+        // Custom validation logic
+        document.getElementById('myForm').addEventListener('input', function (e) {
+            var name = document.getElementById('name').value.trim().toLowerCase();
+            var email = document.getElementById('email').value.trim().toLowerCase();
+
+            // Only validate if both fields are filled
+            if (name && email) {
+                // Get the part of the email before "@"
+                var emailName = email.split('@')[0];
+
+                // Check if the name is part of the email before "@"
+                if (!emailName.includes(name)) {
+                    // Display error if condition fails
+                    document.getElementById('name').classList.add('is-invalid');
+                    document.getElementById('email').classList.add('is-invalid');
+                } else {
+                    // Remove error if condition is met
+                    document.getElementById('name').classList.remove('is-invalid');
+                    document.getElementById('email').classList.remove('is-invalid');
+                }
+            } else {
+                // Remove error if fields are not both filled
+                document.getElementById('name').classList.remove('is-invalid');
+                document.getElementById('email').classList.remove('is-invalid');
+            }
+        });
+
+        // Optional: Prevent form submission if validation fails
+        document.getElementById('myForm').addEventListener('submit', function (e) {
+            var name = document.getElementById('name').value.trim().toLowerCase();
+            var email = document.getElementById('email').value.trim().toLowerCase();
+            var emailName = email.split('@')[0];
+
+            if (name && email && !emailName.includes(name)) {
+                e.preventDefault();  // Prevent form submission
+                alert('Validation failed. Please correct the errors.');
+            }
+        });
+    </script>
+</body>
+</html>
