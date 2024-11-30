@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form with Bootstrap</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .is-invalid {
+            border-color: red;
+        }
+        .invalid-feedback {
+            color: red;
+        }
+        .password-icon {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Form Example</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="myForm" action="your_backend_script.php" method="POST">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="name" name="name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email">
+                                <div class="invalid-feedback">Name must be part of the email before the "@".</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="password" name="password">
+                                    <span class="input-group-text">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/2/24/Eye_icon.svg" alt="Show/Hide Password" class="password-icon" id="togglePassword" width="20" height="20">
+                                    </span>
+                                </div>
+                                <div class="invalid-feedback">Password must be at least 6 characters long.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="state" class="form-label">State</label>
+                                <select class="form-select" id="state" name="state">
+                                    <option value="" disabled selected>Select a state</option>
+                                    <option value="state1">State 1</option>
+                                    <option value="state2">State 2</option>
+                                    <option value="state3">State 3</option>
+                                    <option value="state4">State 4</option>
+                                </select>
+                                <div class="invalid-feedback">Please select a state.</div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+    <script>
+        // Custom validation logic
+        document.getElementById('myForm').addEventListener('input', function (e) {
+            var name = document.getElementById('name').value.trim().toLowerCase();
+            var email = document.getElementById('email').value.trim().toLowerCase();
+            var password = document.getElementById('password').value.trim();
+            var state = document.getElementById('state').value;
+
+            // Only validate if both fields are filled
+            if (name && email) {
+                // Get the part of the email before "@"
+                var emailName = email.split('@')[0];
+
+                // Split the name into parts (first and last name) if it's multi-word
+                var nameParts = name.split(' ');
+
+                // Check if all parts of the name exist in the email before "@"
+                var isValid = nameParts.every(function(part) {
+                    return emailName.includes(part);
+                });
+
+                if (!isValid) {
+                    // Display error if condition fails
+                    document.getElementById('name').classList.add('is-invalid');
+                    document.getElementById('email').classList.add('is-invalid');
+                } else {
+                    // Remove error if condition is met
+                    document.getElementById('name').classList.remove('is-invalid');
+                    document.getElementById('email').classList.remove('is-invalid');
+                }
+            } else {
+                // Remove error if fields are not both filled
+                document.getElementById('name').classList.remove('is-invalid');
+                document.getElementById('email').classList.remove('is-invalid');
+            }
+
+            // Password validation
+            if (password.length < 6) {
+                document.getElementById('password').classList.add('is-invalid');
+            } else {
+                document.getElementById('password').classList.remove('is-invalid');
+            }
+
+            // State validation
+            if (!state) {
+                document.getElementById('state').classList.add('is-invalid');
+            } else {
+                document.getElementById('state').classList.remove('is-invalid');
+            }
+        });
+
+        // Toggle password visibility
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            var passwordField = document.getElementById('password');
+            var type = passwordField.type === 'password' ? 'text' : 'password';
+            passwordField.type = type;
+
+            // Toggle the image icon for show/hide
+            var icon = document.getElementById('togglePassword');
+            if (type === 'password') {
+                icon.src = 'https://upload.wikimedia.org/wikipedia/commons/2/24/Eye_icon.svg';  // Eye icon for hidden password
+            } else {
+                icon.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Visible_icon.svg/120px-Visible_icon.svg.png';  // Eye with slash for visible password
+            }
+        });
+
+        // Prevent form submission if fields are empty and show an alert
+        document.getElementById('myForm').addEventListener('submit', function (e) {
+            var name = document.getElementById('name').value.trim();
+            var email = document.getElementById('email').value.trim();
+            var password = document.getElementById('password').value.trim();
+            var state = document.getElementById('state').value;
+
+            if (!name || !email || !password || !state) {
+                e.preventDefault();  // Prevent form submission
+                alert('Please fill in all fields before submitting.');
+            } else {
+                var emailName = email.split('@')[0];
+
+                // Split the name into parts
+                var nameParts = name.split(' ');
+
+                // Check if all parts of the name are in the email name before "@"
+                var isValid = nameParts.every(function(part) {
+                    return emailName.includes(part);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
