@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form with Validation</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .error {
+            color: red;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Form</h2>
+        <form id="myForm" action="your_form_processing_script.php" method="POST" onsubmit="return validateForm()">
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label>
+                <input type="text" class="form-control" id="name" name="name">
+                <div id="nameError" class="error"></div>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" class="form-control" id="email" name="email">
+                <div id="emailError" class="error"></div>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password:</label>
+                <input type="password" class="form-control" id="password" name="password">
+                <div id="passwordError" class="error"></div>
+            </div>
+            <div class="mb-3">
+                <label for="state" class="form-label">State:</label>
+                <select class="form-select" id="state" name="state">
+                    <option value="">Select a state</option>
+                    <option value="state1">State 1</option>
+                    <option value="state2">State 2</option>
+                    <option value="state3">State 3</option>
+                </select>
+                <div id="stateError" class="error"></div>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS (optional) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function validateForm() {
+            let isValid = true;
+
+            // Clear previous error messages
+            document.getElementById('nameError').innerText = '';
+            document.getElementById('emailError').innerText = '';
+            document.getElementById('passwordError').innerText = '';
+            document.getElementById('stateError').innerText = '';
+
+            // Validate name
+            if (document.getElementById('name').value.trim() === '') {
+                document.getElementById('nameError').innerText = 'Name is required.';
+                isValid = false;
+            }
+
+            // Validate email format
+            const email = document.getElementById('email').value.trim();
+            const name = document.getElementById('name').value.trim();
+            const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/; // Basic email regex
+
+            if (email === '') {
+                document.getElementById('emailError').innerText = 'Email is required.';
+                isValid = false;
+            } else if (!email.startsWith(name)) {
+                document.getElementById('emailError').innerText = 'Email should start with the name.';
+                isValid = false;
+            } else if (!emailPattern.test(email)) {
+                document.getElementById('emailError').innerText = 'Please enter a valid email address.';
+                isValid = false;
+            }
+
+            // Validate password
+            const password = document.getElementById('password').value.trim();
+            if (password === '') {
+                document.getElementById('passwordError').innerText = 'Password is required.';
+                isValid = false;
+            } else if (password.length < 6) {
+                document.getElementById('passwordError').innerText = 'Password must be at least 6 characters.';
+                isValid = false;
+            }
+
+            // Validate state
+            if (document.getElementById('state').value === '') {
+                document.getElementById('stateError').innerText = 'State is required.';
+                isValid = false;
+            }
+
+            // Log the form validation status for debugging
+            console.log('Form Valid:', isValid);
+
+            return isValid;
+        }
+
+        // Dynamically show or hide error messages as user types or interacts
+        document.getElementById('name').addEventListener('input', function () {
+            if (this.value.trim() !== '') {
+                document.getElementById('nameError').innerText = '';
+            }
+        });
+
+        document.getElementById('email').addEventListener('input', function () {
+            const name = document.getElementById('name').value.trim();
+            const email = this.value.trim();
+            const emailError = document.getElementById('emailError');
+
+            // Clear previous error messages
+            emailError.innerText = '';
+
+            // Validate email starts with the name
+            if (email !== '' && !email.startsWith(name)) {
+                emailError.innerText = 'Email should start with the name.';
+            }
+        });
+
+        document.getElementById('password').addEventListener('input', function () {
+            if (this.value.trim() !== '') {
+                document.getElementById('passwordError').innerText = '';
+            }
+        });
+
+        document.getElementById('state').addEventListener('change', function () {
+            if (this.value !== '') {
+                document.getElementById('stateError').innerText = '';
+            }
+        });
+    </script>
+</body>
+</html>
