@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form with Validation</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .is-invalid {
+            border-color: red;
+        }
+        .invalid-feedback {
+            color: red;
+            display: none;
+        }
+        .invalid-feedback.show {
+            display: block;
+        }
+        .password-icon {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Form Example</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="myForm" action="your_backend_script.php" method="POST" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="name" name="name">
+                                <div class="invalid-feedback">Name is required.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email">
+                                <div class="invalid-feedback">Valid email is required.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="password" name="password">
+                                    <span class="input-group-text">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/2/24/Eye_icon.svg" alt="Show/Hide Password" class="password-icon" id="togglePassword" width="20" height="20">
+                                    </span>
+                                </div>
+                                <div class="invalid-feedback">Password must be at least 6 characters long.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="state" class="form-label">State</label>
+                                <select class="form-select" id="state" name="state">
+                                    <option value="" disabled selected>Select a state</option>
+                                    <option value="state1">State 1</option>
+                                    <option value="state2">State 2</option>
+                                    <option value="state3">State 3</option>
+                                    <option value="state4">State 4</option>
+                                </select>
+                                <div class="invalid-feedback">Please select a state.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="file" class="form-label">Upload File</label>
+                                <input type="file" class="form-control" id="file" name="file">
+                                <div class="invalid-feedback">Please upload a file.</div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+<script>
+    // Toggle password visibility
+    document.getElementById('togglePassword').addEventListener('click', function () {
+        const passwordField = document.getElementById('password');
+        passwordField.type = passwordField.type === 'password' ? 'text' : 'password';
+    });
+
+    // Add event listeners to hide validation errors dynamically
+    function hideErrorOnInput(input) {
+        input.addEventListener('input', function () {
+            if (input.value.trim()) {
+                input.classList.remove('is-invalid');
+                if (input.nextElementSibling.classList.contains('invalid-feedback')) {
+                    input.nextElementSibling.classList.remove('show');
+                }
+            }
+        });
+    }
+
+    function hideErrorOnChange(select) {
+        select.addEventListener('change', function () {
+            if (select.value) {
+                select.classList.remove('is-invalid');
+                if (select.nextElementSibling.classList.contains('invalid-feedback')) {
+                    select.nextElementSibling.classList.remove('show');
+                }
+            }
+        });
+    }
+
+    // Attach the event listeners to each field
+    const name = document.getElementById('name');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const state = document.getElementById('state');
+    const file = document.getElementById('file');
+
+    hideErrorOnInput(name);
+    hideErrorOnInput(email);
+    hideErrorOnInput(password);
+    hideErrorOnChange(state);
+    file.addEventListener('input', function () {
+        if (file.files.length) {
+            file.classList.remove('is-invalid');
+            file.nextElementSibling.classList.remove('show');
+        }
+    });
+
+    // Form validation on submit
+    document.getElementById('myForm').addEventListener('submit', function (e) {
+        let isValid = true;
+
+        // Name validation
+        if (!name.value.trim()) {
+            name.classList.add('is-invalid');
+            name.nextElementSibling.classList.add('show');
+            isValid = false;
+        }
+
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email.value.trim() || !emailRegex.test(email.value.trim())) {
+            email.classList.add('is-invalid');
+            email.nextElementSibling.classList.add('show');
+            isValid = false;
+        }
+
+        // Password validation
+        if (!password.value.trim() || password.value.length < 6) {
+            password.classList.add('is-invalid');
+            password.nextElementSibling.classList.add('show');
+            isValid = false;
+        }
+
+        // State validation
+        if (!state.value) {
+            state.classList.add('is-invalid');
+            state.nextElementSibling.classList.add('show');
+            isValid = false;
+        }
+
+        // File validation
+        if (!file.files.length) {
+            file.classList.add('is-invalid');
+            file.nextElementSibling.classList.add('show');
+            isValid = false;
+        }
+
+        if (!isValid) {
+            e.preventDefault(); // Prevent form submission if invalid
+        }
+    });
+</script>
+
+</body>
+</html>
